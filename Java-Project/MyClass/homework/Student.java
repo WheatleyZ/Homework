@@ -16,6 +16,7 @@ public class Student {
 		for(int i=0;i<5;i++){
 			group1.add(new Student(names[i],scores[i]));
 		}
+		group1;
 	}
 
 }
