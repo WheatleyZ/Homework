@@ -20,7 +20,7 @@ public class Student {
 	}
 
 	public static void main(String[] args) {
-		String[] names = { "寮犱笁", "鏉庡洓", "灏忔槑", "鐜嬩簲", "浣曞叚" };
+		String[] names = { "张三", "李四", "小明", "王五", "何六" };
 		int[] scores = { 90, 80, 85, 60, 70 };
 		Vector<Student> group1 = new Vector<Student>(5);
 
@@ -34,7 +34,7 @@ public class Student {
 				return -(o1.getScore().compareTo(o2.getScore()));
 			}
 		});
-
+		System.out.println("Collections.sort排序");
 		for (Student s : group1) {
 			if (s.score == 60)
 				System.out.println("*" + s);
@@ -43,7 +43,7 @@ public class Student {
 		}
 
 		for (int i = 0; i < group1.capacity(); i++) {
-			for (int j = group1.capacity()-1; j > i; j--) {
+			for (int j = group1.capacity() - 1; j > i; j--) {
 				if (group1.get(j).score > group1.get(j - 1).score) {
 					Student tmp = group1.get(j);
 					group1.remove(j);
@@ -51,13 +51,13 @@ public class Student {
 				}
 			}
 		}
-
+		System.out.println("手动冒泡排序");
 		for (Student s : group1) {
 			if (s.score == 60)
 				System.out.println("*" + s);
 			else
 				System.out.println(s);
 		}
-
+		System.out.println("搜索到60分的在名字前加“*”");
 	}
 }
