@@ -20,7 +20,7 @@ public class Student {
 	}
 
 	public static void main(String[] args) {
-		String[] names = { "张三", "李四", "小明", "王五", "何六" };
+		String[] names = { "寮犱笁", "鏉庡洓", "灏忔槑", "鐜嬩簲", "浣曞叚" };
 		int[] scores = { 90, 80, 85, 60, 70 };
 		Vector<Student> group1 = new Vector<Student>(5);
 
