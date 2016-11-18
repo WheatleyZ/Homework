@@ -89,7 +89,6 @@ class ServerCommThread extends Thread {
 				frame.msgTextArea.append("Other say: " + hear + "\n");
 			}
 		} catch (IOException e) {
-			// TODO 自动生成的 catch 块
 			e.printStackTrace();
 		}
 	}
@@ -116,3 +115,4 @@ serverCommThread.start();
 			e1.printStackTrace();
 		}
 	}
+}

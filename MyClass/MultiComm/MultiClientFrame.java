@@ -1,4 +1,4 @@
-package net;
+package MultiComm;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.BufferedReader;
@@ -9,19 +9,19 @@ import java.net.*;
 
 import com.sun.xml.internal.ws.wsdl.writer.document.PortType;
 
-public class ClientFrame extends Frame implements ActionListener {
+public class MultiClientFrame extends Frame implements ActionListener {
 	Panel northPanel, southPanel;
 	Button connectButton, sayButton;
 	TextField sayTextField, portTextField, ipTextField;
 	TextArea msgTextArea;
 	Socket socket;
 
-	public ClientFrame(String title) {
+	public MultiClientFrame(String title) {
 		super(title);
 	}
 
 	public static void main(String[] args) {
-		MultiClientFrame server = new MultiClientFrame("客户� ");
+		MultiClientFrame server = new MultiClientFrame("客户端");
 		server.drawGUI();
 	}
 
@@ -70,7 +70,7 @@ public class ClientFrame extends Frame implements ActionListener {
 				pw = new PrintWriter(socket.getOutputStream());
 				pw.println(sayTextField.getText());
 				pw.flush();
-				msgTextArea.append("I Say: " + sayTextField.getText() + "\n");
+//				msgTextArea.append(sayTextField.getText() + "\n");
 				sayTextField.setText(null);
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -79,11 +79,11 @@ public class ClientFrame extends Frame implements ActionListener {
 	}
 }
 
-class ClientCommThread extends Thread {
+class MultiClientCommThread extends Thread {
 	MultiClientFrame frame;
 	Socket socket;
 
-	public ClientCommThread(MultiClientFrame clientFrame) {
+	public MultiClientCommThread(MultiClientFrame clientFrame) {
 		this.frame = clientFrame;
 		this.socket = frame.socket;
 	}
@@ -97,7 +97,7 @@ class ClientCommThread extends Thread {
 			hearReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			while (true) {
 				String hear = hearReader.readLine();
-				frame.msgTextArea.append("Other say: " + hear + "\n");
+				frame.msgTextArea.append(hear + "\n");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
