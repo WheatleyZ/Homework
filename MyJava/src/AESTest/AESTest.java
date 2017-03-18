@@ -26,7 +26,7 @@ public class AESTest {
 	}
 	
 	static void deCipher(){
-		
+		int[] state = {};
 		for(int i=0;i<9;i++){
 			subBytes();
 			shiftRows();
