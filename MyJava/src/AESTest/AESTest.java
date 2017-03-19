@@ -25,8 +25,7 @@ public class AESTest {
 	static int[] rCon = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36 };
 
 	public static void main(String[] args) {
-		int w[] = new int[44];
-		keyExp(w);
+		keyExp();
 		for (int x : finalkey) {
 			System.out.println(x);
 		}
@@ -49,7 +48,7 @@ public class AESTest {
 		}
 	}
 
-	private static void keyExp(int[] w) {
+	private static void keyExp() {
 		for (int i = 0; i < 4; i++) {
 			finalkey[i] = (((key[4 * i]) * 0x100 + key[4 * i + 1]) * 0x100 + key[4 * i + 2]) * 0x100 + key[4 * i + 3];
 			System.out.println(i + " - " + Integer.toHexString(finalkey[i]));
