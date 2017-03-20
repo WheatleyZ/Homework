@@ -66,8 +66,8 @@ public class AESTest {
 
 	static void deCipher() {
 		keyExp(key);
-		int[][] state = { { 0x32, 0x88, 0x31, 0xe0 }, { 0x43, 0x5a, 0x31, 0x37 }, { 0xf6, 0x30, 0x98, 0x07 },
-				{ 0xa8, 0x8d, 0xa2, 0x34 } };
+		int[][] state = { { 0x32, 0x43, 0xf6, 0xa8 }, { 0x88, 0x5a, 0x30, 0x8d }, { 0x31, 0x31, 0x98, 0xa2 },
+				{ 0xe0, 0x37, 0x07, 0x34 } };
 		addRoundKey(state, 0);
 		for (int i = 0; i < 9; i++) {
 			subBytes(state);
@@ -91,13 +91,19 @@ public class AESTest {
 	}
 
 	private static void shiftRows(int[][] state) {
-		for (int i = 1; i < 4; i++) {
-			int temp = state[1][i];
-			for (int j = 1; j < 4; j++) {
-				state[j][i] = state[(j + i) % 4][i];
+		for(int i=0;i<4;i++){
+			for(int j=i;j>0;j--){
+				shiftOnce(state,i);
 			}
-			state[4 - i][i] = temp;
 		}
+	}
+
+	static void shiftOnce(int[][] state, int row) {
+		int temp = state[0][row];
+		for (int i = 0; i < 3; i++) {
+			state[i][row] = state[i + 1][row];
+		}
+		state[3][row] = temp;
 	}
 
 	private static void mixColumns(int[][] state) {
