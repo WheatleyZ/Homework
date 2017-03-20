@@ -25,10 +25,7 @@ public class AESTest {
 	static int[] rCon = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36 };
 
 	public static void main(String[] args) {
-		keyExp();
-		for (int x : finalkey) {
-			System.out.println(Integer.toHexString(x));
-		}
+		deCipher();
 	}
 
 	private static void rotWord(int[] w) {
@@ -41,16 +38,13 @@ public class AESTest {
 
 	private static void subWord(int[] w) {
 		for (int i = 0; i < w.length; i++) {
-			while (w[i] < 0) {
-				w[i] += 0x100;
-			}
 			int x = w[i] / 0x10;
 			int y = w[i] % 0x10;
 			w[i] = sBox[0x10 * x + y];
 		}
 	}
 
-	private static void keyExp() {
+	private static void keyExp(int[] key) {
 		for (int i = 0; i < 4; i++) {
 			finalkey[i] = (((key[4 * i]) * 0x100 + key[4 * i + 1]) * 0x100 + key[4 * i + 2]) * 0x100 + key[4 * i + 3];
 		}
@@ -71,36 +65,61 @@ public class AESTest {
 	}
 
 	static void deCipher() {
-		// int[] state = {};
-		// for (int i = 0; i < 9; i++) {
-		// subBytes();
-		// shiftRows();
-		// mixColumns();
-		// addRoundKey();
-		// }
-		// subBytes();
-		// shiftRows();
-		// addRoundKey();
+		keyExp(key);
+		int[][] state = { { 0x32, 0x88, 0x31, 0xe0 }, { 0x43, 0x5a, 0x31, 0x37 }, { 0xf6, 0x30, 0x98, 0x07 },
+				{ 0xa8, 0x8d, 0xa2, 0x34 } };
+		addRoundKey(state, 0);
+		for (int i = 0; i < 9; i++) {
+			subBytes(state);
+			shiftRows(state);
+			mixColumns(state);
+			addRoundKey(state, i + 1);
+		}
+		subBytes(state);
+		shiftRows(state);
+		addRoundKey(state, 10);
 	}
 
-	private static void subBytes() {
-		// TODO Auto-generated method stub
+	private static void subBytes(int[][] state) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				int x = state[i][j] / 0x10;
+				int y = state[i][j] % 0x10;
+				state[i][j] = sBox[0x10 * x + y];
+			}
+		}
+	}
+
+	private static void shiftRows(int[][] state) {
+		for (int i = 0; i < 4; i++) {
+			int temp = state[1][i];
+			for (int j = 1; j < 4; j++) {
+				state[j][i] = state[(j + i + 1) % 4][i];
+			}
+		}
+	}
+
+	private static void mixColumns(int[][] state) {
 
 	}
 
-	private static void shiftRows() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private static void mixColumns() {
-		// TODO Auto-generated method stub
-
-	}
-
-	private static void addRoundKey() {
-		// TODO Auto-generated method stub
-
+	private static void addRoundKey(int[][] state, int round) {
+		int[][] roundKey = new int[4][4];
+		for (int i = round * 4; i < round + 4; i++) {
+			long a = finalkey[i];
+			while (a < 0)
+				a += 0x100000000l;
+			int[] temp = { (int) ((a / 0x1000000) % 0x100), (int) (((a % 0x1000000 - a % 0x1000) / 0x10000) % 0x100),
+					(int) (((a % 0x10000 - a % 0x100) / 0x100) % 0x100), (int) (a % 0x100) };
+			for (int j = 0; j < 4; j++) {
+				roundKey[i % 4][j] = temp[j];
+			}
+		}
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				state[i][j] ^= roundKey[i][j];
+			}
+		}
 	}
 
 }
