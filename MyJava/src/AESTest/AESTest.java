@@ -91,11 +91,12 @@ public class AESTest {
 	}
 
 	private static void shiftRows(int[][] state) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 1; i < 4; i++) {
 			int temp = state[1][i];
 			for (int j = 1; j < 4; j++) {
-				state[j][i] = state[(j + i + 1) % 4][i];
+				state[j][i] = state[(j + i) % 4][i];
 			}
+			state[4 - i][i] = temp;
 		}
 	}
 
