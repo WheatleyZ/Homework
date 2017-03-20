@@ -27,7 +27,7 @@ public class AESTest {
 	public static void main(String[] args) {
 		keyExp();
 		for (int x : finalkey) {
-			System.out.println(x);
+			System.out.println(Integer.toHexString(x));
 		}
 	}
 
@@ -41,12 +41,11 @@ public class AESTest {
 
 	private static void subWord(int[] w) {
 		for (int i = 0; i < w.length; i++) {
-			while (w[i] < 0)
+			while (w[i] < 0) {
 				w[i] += 0x100;
+			}
 			int x = w[i] / 0x10;
 			int y = w[i] % 0x10;
-			System.out.println(Integer.toHexString(w[i]) + " " + Integer.toHexString(x) + " " + Integer.toHexString(y)
-					+ " " + Integer.toHexString(sBox[0x10 * x + y]));
 			w[i] = sBox[0x10 * x + y];
 		}
 	}
@@ -54,12 +53,13 @@ public class AESTest {
 	private static void keyExp() {
 		for (int i = 0; i < 4; i++) {
 			finalkey[i] = (((key[4 * i]) * 0x100 + key[4 * i + 1]) * 0x100 + key[4 * i + 2]) * 0x100 + key[4 * i + 3];
-			System.out.println(i + " - " + Integer.toHexString(finalkey[i]));
 		}
 		for (int i = 4; i < 44; i++) {
-			int[] temp = { (finalkey[i - 1] / 0x1000000) % 0x100,
-					((finalkey[i - 1] % 0x1000000 - finalkey[i - 1] % 0x1000) / 0x10000) % 0x100,
-					((finalkey[i - 1] % 0x10000 - finalkey[i - 1] % 0x100) / 0x100) % 0x100, finalkey[i - 1] % 0x100 };
+			long a = finalkey[i - 1];
+			while (a < 0)
+				a += 0x100000000l;
+			int[] temp = { (int) ((a / 0x1000000) % 0x100), (int) (((a % 0x1000000 - a % 0x1000) / 0x10000) % 0x100),
+					(int) (((a % 0x10000 - a % 0x100) / 0x100) % 0x100), (int) (a % 0x100) };
 			if (i % 4 == 0) {
 				rotWord(temp);
 				subWord(temp);
@@ -67,7 +67,6 @@ public class AESTest {
 			}
 			finalkey[i] = (((temp[0]) * 0x100 + temp[1]) * 0x100 + temp[2]) * 0x100 + temp[3];
 			finalkey[i] ^= finalkey[i - 4];
-			System.out.println(i + " - " + Integer.toHexString(finalkey[i]));
 		}
 	}
 
