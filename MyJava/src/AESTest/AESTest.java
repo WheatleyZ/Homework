@@ -41,9 +41,8 @@ public class AESTest {
 
 	private static void subWord(int[] w) {
 		for (int i = 0; i < w.length; i++) {
-			while (w[i] < 0) {
+			while (w[i] < 0)
 				w[i] += 0x100;
-			}
 			int x = w[i] / 0x10;
 			int y = w[i] % 0x10;
 			System.out.println(Integer.toHexString(w[i]) + " " + Integer.toHexString(x) + " " + Integer.toHexString(y)
