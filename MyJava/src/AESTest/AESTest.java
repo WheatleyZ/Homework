@@ -26,11 +26,7 @@ public class AESTest {
 	static int[] rCon = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1B, 0x36 };
 
 	public static void main(String[] args) {
-//		deCipher();
-		keyExp(key);
-		for(int a:finalkey){
-			System.out.println(Integer.toHexString(a));
-		}
+		deCipher();
 	}
 
 	private static void rotWord(int[] w) {
@@ -75,42 +71,22 @@ public class AESTest {
 				{ 0xe0, 0x37, 0x07, 0x34 } };
 		addRoundKey(state, 0);
 		for (int i = 1; i <= 9; i++) {
-			for (int[] x : state) {
-				for (int y : x)
-					System.out.println("init "+Integer.toHexString(y) + " " + i);
-				System.out.println("\n");
-			}
 			subBytes(state);
-			for (int[] x : state) {
-				for (int y : x)
-					System.out.println("subB "+Integer.toHexString(y) + " " + i);
-				System.out.println("\n");
-			}
 			shiftRows(state);
-			for (int[] x : state) {
-				for (int y : x)
-					System.out.println("shifR "+Integer.toHexString(y) + " " + i);
-				System.out.println("\n");
-			}
-			mixColumns(state);for (int[] x : state) {
-				for (int y : x)
-					System.out.println("mixC "+Integer.toHexString(y) + " " + i);
-				System.out.println("\n");
-			}
+			mixColumns(state);
 			addRoundKey(state, i);
-			for (int[] x : state) {
-				for (int y : x)
-					System.out.println("adRK "+Integer.toHexString(y) + " " + i);
-				System.out.println("\n");
-			}
 		}
 		subBytes(state);
 		shiftRows(state);
 		addRoundKey(state, 10);
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				System.out.println(Integer.toHexString(state[j][i]));
+		for(int i:finalkey){			
+			System.out.println(Integer.toHexString(i));
+		}
+		for(int[] i:state){
+			for(int j:i){
+				System.out.println(Integer.toHexString(j));
 			}
+			System.out.println("\n");
 		}
 	}
 
@@ -177,7 +153,7 @@ public class AESTest {
 
 	private static void addRoundKey(int[][] state, int round) {
 		int[][] roundKey = new int[4][4];
-		for (int i = round * 4; i < round + 4; i++) {
+		for (int i = round * 4; i < round * 4 + 4; i++) {
 			long a = finalkey[i];
 			while (a < 0)
 				a += 0x100000000l;
