@@ -79,14 +79,16 @@ public class AESTest {
 		subBytes(state);
 		shiftRows(state);
 		addRoundKey(state, 10);
+		System.out.println("密钥：");
 		for(int i:finalkey){			
-			System.out.println(Integer.toHexString(i));
+			System.out.print(String.format("%2s", Integer.toHexString(i)).replaceAll(" ", "0"));
 		}
+		System.out.println("\n密文：");
 		for(int[] i:state){
 			for(int j:i){
-				System.out.println(Integer.toHexString(j));
+				System.out.print(String.format("%2s", Integer.toHexString(j)).replaceAll(" ", "0"));
 			}
-			System.out.println("\n");
+			System.out.print("\n");
 		}
 	}
 
