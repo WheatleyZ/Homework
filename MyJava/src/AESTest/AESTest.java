@@ -1,6 +1,7 @@
 package AESTest;
 
 import java.io.*;
+import java.math.*;
 
 public class AESTest {
 	static int[] key = { 0x2B, 0x7E, 0x15, 0x16, 0x28, 0xAE, 0xD2, 0xA6, 0xAB, 0xF7, 0x15, 0x88, 0x09, 0xCF, 0x4F,
@@ -69,15 +70,26 @@ public class AESTest {
 		int[][] state = { { 0x32, 0x43, 0xf6, 0xa8 }, { 0x88, 0x5a, 0x30, 0x8d }, { 0x31, 0x31, 0x98, 0xa2 },
 				{ 0xe0, 0x37, 0x07, 0x34 } };
 		addRoundKey(state, 0);
-		for (int i = 0; i < 9; i++) {
+		for (int i = 1; i <= 9; i++) {
 			subBytes(state);
 			shiftRows(state);
 			mixColumns(state);
-			addRoundKey(state, i + 1);
+			addRoundKey(state, i);
 		}
 		subBytes(state);
 		shiftRows(state);
 		addRoundKey(state, 10);
+		System.out.println("密钥：");
+		for(int i:finalkey){			
+			System.out.print(String.format("%2s", Integer.toHexString(i)).replaceAll(" ", "0"));
+		}
+		System.out.println("\n密文：");
+		for(int[] i:state){
+			for(int j:i){
+				System.out.print(String.format("%2s", Integer.toHexString(j)).replaceAll(" ", "0"));
+			}
+			System.out.print("\n");
+		}
 	}
 
 	private static void subBytes(int[][] state) {
@@ -91,9 +103,9 @@ public class AESTest {
 	}
 
 	private static void shiftRows(int[][] state) {
-		for(int i=0;i<4;i++){
-			for(int j=i;j>0;j--){
-				shiftOnce(state,i);
+		for (int i = 0; i < 4; i++) {
+			for (int j = i; j > 0; j--) {
+				shiftOnce(state, i);
 			}
 		}
 	}
@@ -107,12 +119,43 @@ public class AESTest {
 	}
 
 	private static void mixColumns(int[][] state) {
+		for (int[] column : state) {
+			int[] t = new int[4];
+			for (int i = 0; i < column.length; i++) {
+				t[i] = column[i];
+			}
+			int[] u = new int[4];
+			u[0] = fieldMulti(2, t[0]) ^ fieldMulti(3, t[1]) ^ t[2] ^ t[3];
+			u[1] = fieldMulti(2, t[1]) ^ fieldMulti(3, t[2]) ^ t[3] ^ t[0];
+			u[2] = fieldMulti(2, t[2]) ^ fieldMulti(3, t[3]) ^ t[0] ^ t[1];
+			u[3] = fieldMulti(2, t[3]) ^ fieldMulti(3, t[0]) ^ t[1] ^ t[2];
+			for (int i = 0; i < 4; i++) {
+				column[i] = u[i];
+			}
+		}
+	}
 
+	private static int fieldMulti(int a, int b) {
+		int answer = 0;
+		int[] aMulti = new int[8];
+		aMulti[0] = a;
+		for (int i = 1; i < 8; i++) {
+			aMulti[i] = aMulti[i - 1] * 2 % 0x100;
+			if (aMulti[i - 1] > 0x7f)
+				aMulti[i] ^= 0x1b;
+		}
+		String bBinary = Integer.toBinaryString(b);
+		for (int i = bBinary.length() - 1; i >= 0; i--) {
+			if (bBinary.charAt(i) == '1') {
+				answer ^= aMulti[bBinary.length() - i - 1];
+			}
+		}
+		return answer;
 	}
 
 	private static void addRoundKey(int[][] state, int round) {
 		int[][] roundKey = new int[4][4];
-		for (int i = round * 4; i < round + 4; i++) {
+		for (int i = round * 4; i < round * 4 + 4; i++) {
 			long a = finalkey[i];
 			while (a < 0)
 				a += 0x100000000l;
