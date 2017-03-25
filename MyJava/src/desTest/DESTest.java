@@ -12,7 +12,7 @@ public class DESTest {
 	static int[] plainText = new int[64];
 	static String key = "0123456789abcdab";
 	static int[] keySrc;
-	static int[] finalKey = new int[16];
+	static long[] finalKey = new long[16];
 
 	public static void main(String[] args) {
 		try {
@@ -41,10 +41,18 @@ public class DESTest {
 		System.out.println("finished");
 	}
 
+	static void enCipher() {
+		
+	}
+
+	static void deCipher() {
+
+	}
+
 	private static void generate(int[] keySrc) {
 		for (int i = 0; i < 16; i++) {
 			leftShift(keySrc);
-			int temp = keySrc[pc2[0]];
+			long temp = keySrc[pc2[0]];
 			for (int j = 1; j < 48; j++) {
 				temp *= 2;
 				temp += keySrc[pc2[j] - 1];
@@ -62,13 +70,4 @@ public class DESTest {
 			keySrc[28 * i + 27] = temp;
 		}
 	}
-
-	static void enCipher() {
-
-	}
-
-	static void deCipher() {
-
-	}
-
 }
