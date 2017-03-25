@@ -10,7 +10,7 @@ public class DESTest {
 	static int[] pc2 = { 14, 17, 11, 24, 1, 5, 3, 28, 15, 6, 21, 10, 23, 19, 12, 4, 26, 8, 16, 7, 27, 20, 13, 2, 41, 52,
 			31, 37, 47, 55, 30, 40, 51, 45, 33, 48, 44, 49, 39, 56, 34, 53, 46, 42, 50, 36, 29, 32 };
 	static int[] plainText = new int[64];
-	static String key;
+	static String key = "0123456789abcdab";
 	static int[] keySrc;
 	static int[] finalKey = new int[16];
 
@@ -23,14 +23,22 @@ public class DESTest {
 	}
 
 	private static void keyGenenate(String key) throws Exception {
-		if (key.length() != 64)
-			throw new Exception();
+		// if (key.length() != 64)
+		// throw new Exception();
 		keySrc = new int[56];
-		key = Integer.toBinaryString(Integer.parseInt(key));
+		String temp = "";
+		for (int i = 0; i < 16; i++) {
+			temp += String
+					.format("%4s", Integer.toBinaryString(Integer.parseInt(Character.toString(key.charAt(i)), 16)))
+					.replace(" ", "0");
+		}
+		key = temp;
+		// key = Integer.toBinaryString(Integer.parseInt(key));
 		for (int i = 0; i < 56; i++) {
-			keySrc[i] = Integer.parseInt(Character.toString(key.charAt(pc1[i])));
+			keySrc[i] = Integer.parseInt(Character.toString(key.charAt(pc1[i] - 1)));
 		}
 		generate(keySrc);
+		System.out.println("finished");
 	}
 
 	private static void generate(int[] keySrc) {
@@ -39,7 +47,7 @@ public class DESTest {
 			int temp = keySrc[pc2[0]];
 			for (int j = 1; j < 48; j++) {
 				temp *= 2;
-				temp += keySrc[pc2[j]];
+				temp += keySrc[pc2[j] - 1];
 			}
 			finalKey[i] = temp;
 		}
