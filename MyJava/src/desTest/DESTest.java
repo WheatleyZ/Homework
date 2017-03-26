@@ -1,6 +1,5 @@
 package desTest;
 
-import java.math.BigInteger;
 import java.lang.Exception;
 
 public class DESTest {
