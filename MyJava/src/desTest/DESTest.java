@@ -44,13 +44,27 @@ public class DESTest {
 					5, 6, 11 } };
 	static int[] p = { 16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31, 10, 2, 8, 24, 14, 32, 27, 3, 9, 19, 13,
 			30, 6, 22, 11, 4, 25 };
-	static int[][] pInput = new int[2][32];
-	static String key = "0123456789abcdab";
+	static int[][] plainText = new int[2][32];
+	static int[][] cipherText = new int[2][32];
+	static String key = "3b3898371520f75e";
 	static int[] keySrc;
-	static int[] finalKey = new int[16];
+	static long[] finalKey = new long[16];
 
 	public static void main(String[] args) {
-
+		String msg = "3b3898371520f75e";
+		for (int i = 0; i < 16; i++) {
+			String msgi = String.format("%4s", Integer.toBinaryString(Character.getNumericValue(msg.charAt(i))))
+					.replaceAll(" ", "0");
+			for (int j = 0; j < 4; j++) {
+				plainText[(i * 4 + j) / 32][(i * 4 + j) % 32] = Character.getNumericValue(msgi.charAt(j));
+			}
+		}
+		enCipher();
+		for (int i[] : cipherText) {
+			for (int j : i) {
+				System.out.println(j);
+			}
+		}
 	}
 
 	static void enCipher() {
@@ -59,7 +73,22 @@ public class DESTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		int[][] pInput = new int[2][32];
+		for (int i = 0; i < 64; i++) {
+			pInput[i / 32][i % 32] = plainText[(ip[i] - 1) / 32][(ip[i] - 1) % 32];
+		}
+		for (int i = 0; i < 16; i++) {
+			int[] temp = fFunc(pInput[1], finalKey[i]);
+			for (int j = 0; j < 32; j++) {
+				pInput[0][j] ^= temp[j];
+			}
+			if (i == 15)
+				break;
+			swap(pInput);
+		}
+		for (int i = 0; i < 64; i++) {
+			cipherText[i / 32][i % 32] = pInput[fp[i] / 32][fp[i] % 32];
+		}
 	}
 
 	static void deCipher() {
@@ -71,33 +100,40 @@ public class DESTest {
 
 	}
 
-	private static int[] fFunc(int[] r, int[] k) {
+	private static int[] fFunc(int[] r, long finalKey2) {
+		int[] k = new int[48];
 		int[] result = new int[32];
 		int[] expandR = new int[48];
 		int[] aftS = new int[8];
+		int[] preP = new int[32];
+		int sX = 0;
+		int sY = 0;
+		String tmpKey = String.format("%48s", Long.toBinaryString(finalKey2)).replaceAll(" ", "0");
+		for (int i = 0; i < 48; i++) {
+			k[i] = tmpKey.charAt(i);
+		}
 		for (int i = 0; i < 48; i++) {
 			expandR[i] = r[e[i] - 1];
 			expandR[i] ^= k[i];
 		}
 		for (int i = 0; i < 8; i++) {
-			int preS = expandR[6 * i];
-			for (int j = i * 6; j < i * 6 + 6; j++) {
-				preS *= 2;
-				preS += expandR[j];
-			}
-			aftS[i] = sBox[i][preS];
+			sX = 2 * expandR[i * 6] + expandR[i * 6 + 5];
+			sY = 8 * expandR[i * 6 + 1] + 4 * expandR[i * 6 + 2] + 2 * expandR[i * 6 + 3] + expandR[i * 6 + 4];
+			aftS[i] = sBox[i][16 * sX + sY];
 		}
 		for (int i = 0; i < 8; i++) {
 			String tmp = String.format("%4s", Integer.toBinaryString(aftS[i])).replaceAll(" ", "0");
 			for (int j = i * 4; j < i * 4 + 4; j++) {
-				result[j] = tmp.charAt(j % 4);
+				preP[j] = tmp.charAt(j % 4);
 			}
 		}
+		for (int i = 0; i < 32; i++) {
+			result[i] = preP[p[i]];
+		}
 		return result;
-
 	}
 
-	private static void swap() {
+	private static void swap(int[][] pInput) {
 		for (int i = 0; i < 32; i++) {
 			int temp = pInput[0][i];
 			pInput[0][i] = pInput[1][i];
@@ -121,7 +157,7 @@ public class DESTest {
 			keySrc[i] = Integer.parseInt(Character.toString(key.charAt(pc1[i] - 1)));
 		}
 		generate(keySrc);
-		System.out.println("finished");
+//		System.out.println("finished");
 	}
 
 	private static void generate(int[] keySrc) {
@@ -129,7 +165,7 @@ public class DESTest {
 			leftShift(keySrc);
 			if (i != 0 && i != 1 && i != 8 && i != 15)
 				leftShift(keySrc);
-			int temp = keySrc[pc2[0]];
+			long temp = keySrc[pc2[0]];
 			for (int j = 1; j < 48; j++) {
 				temp *= 2;
 				temp += keySrc[pc2[j] - 1];
