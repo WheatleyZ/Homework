@@ -45,12 +45,19 @@ public class DESTest {
 			30, 6, 22, 11, 4, 25 };
 	static int[][] plainText = new int[2][32];
 	static int[][] cipherText = new int[2][32];
-	static String key = "3b3898371520f75e";
 	static int[] keySrc;
 	static long[] finalKey = new long[16];
 
 	public static void main(String[] args) {
 		String msg = "8f03456d3f78e2c5";
+		String key = "3b3898371520f75e";
+		System.out.println("message:" + msg);
+		System.out.println("key:" + key);
+		System.out.println("cipher:" + enCipher(msg, key));
+		System.out.println("after decipher:" + deCipher(enCipher(msg, key), key));
+	}
+
+	static String enCipher(String msg, String key) {
 		for (int i = 0; i < 16; i++) {
 			String msgi = String.format("%4s", Integer.toBinaryString(Character.getNumericValue(msg.charAt(i))))
 					.replaceAll(" ", "0");
@@ -58,22 +65,6 @@ public class DESTest {
 				plainText[(i * 4 + j) / 32][(i * 4 + j) % 32] = Character.getNumericValue(msgi.charAt(j));
 			}
 		}
-		deCipher();
-		String cipherString = "";
-		for (int i[] : cipherText) {
-			for (int j : i) {
-				cipherString += j;
-			}
-		}
-		long ans = Character.getNumericValue(cipherString.charAt(0));
-		for (int i = 1; i < 64; i++) {
-			ans *= 2;
-			ans += Character.getNumericValue(cipherString.charAt(i));
-		}
-		System.out.println(Long.toHexString(ans));
-	}
-
-	static void enCipher() {
 		try {
 			keyGenenate(key);
 		} catch (Exception e) {
@@ -95,9 +86,28 @@ public class DESTest {
 		for (int i = 0; i < 64; i++) {
 			cipherText[i / 32][i % 32] = pInput[(fp[i] - 1) / 32][(fp[i] - 1) % 32];
 		}
+		String cipherString = "";
+		for (int i[] : cipherText) {
+			for (int j : i) {
+				cipherString += j;
+			}
+		}
+		long ans = Character.getNumericValue(cipherString.charAt(0));
+		for (int i = 1; i < 64; i++) {
+			ans *= 2;
+			ans += Character.getNumericValue(cipherString.charAt(i));
+		}
+		return Long.toHexString(ans);
 	}
 
-	static void deCipher() {
+	static String deCipher(String msg, String key) {
+		for (int i = 0; i < 16; i++) {
+			String msgi = String.format("%4s", Integer.toBinaryString(Character.getNumericValue(msg.charAt(i))))
+					.replaceAll(" ", "0");
+			for (int j = 0; j < 4; j++) {
+				plainText[(i * 4 + j) / 32][(i * 4 + j) % 32] = Character.getNumericValue(msgi.charAt(j));
+			}
+		}
 		try {
 			keyGenenate(key);
 		} catch (Exception e) {
@@ -119,6 +129,18 @@ public class DESTest {
 		for (int i = 0; i < 64; i++) {
 			cipherText[i / 32][i % 32] = pInput[(fp[i] - 1) / 32][(fp[i] - 1) % 32];
 		}
+		String cipherString = "";
+		for (int i[] : cipherText) {
+			for (int j : i) {
+				cipherString += j;
+			}
+		}
+		long ans = Character.getNumericValue(cipherString.charAt(0));
+		for (int i = 1; i < 64; i++) {
+			ans *= 2;
+			ans += Character.getNumericValue(cipherString.charAt(i));
+		}
+		return Long.toHexString(ans);
 	}
 
 	private static int[] fFunc(int[] r, long finalKey2) {
