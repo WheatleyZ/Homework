@@ -4,7 +4,7 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.Vector;
 
-public class analysis {
+public class VigenereAnalysis {
 	static String c = "KCCPKBGUFDPHQTYAVINRRTMVGRKDNBVFDETDGILTXRGUDDKOTFMBPVGEGLTGCKQRACQCWDNAWCRXIZAKFTLEWRPTYCQKYVXCHKFTPONCQQRHJVAJUWETMCMSPKQDYHJVDAHCTRLSVSKCGCZQQDZXGSFRLSWCWSJTBHAFSIASPRJAHKJRJUMVGKMITZHFPDISPZLVLGWTFPLKKEBDPGCEBSHCTJRWXBAFSPEZQNRWXCVYCGAONWDDKACKAWBBIKFTIOVKCGGHJVLNHIFFSQESVYCLACNVRWBBIREPBBVFEXOSCDYGZWPFDTKFQIYCWHJVLNHIQIBTKHJVNPIST";
 	static char[] alph = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
 			'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
@@ -55,7 +55,8 @@ public class analysis {
 					mg += (pI[(ch + keyOffSet) % 26] * total);
 				}
 				mg /= part.size();
-				System.out.println(offSet + 1 + " " + keyOffSet + " " + mg);
+				System.out.println(offSet + 1 + " " + alph[keyOffSet] + (keyOffSet + 1)
+						+ " " + mg);
 			}
 		}
 	}
