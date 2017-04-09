@@ -1,5 +1,7 @@
 package hmac;
 
+import java.util.ArrayList;
+
 public class HMACTest {
 
 	public static void main(String[] args) {
@@ -37,11 +39,45 @@ public class HMACTest {
 			}
 			block[i] = tmp;
 		}
+
 		for (int i = 0; i < block.length; i++) {
-			
+			int[][] word = new int[80][32];
+			for (int j = 0; j < 16; j++) {
+				for (int k = 0; k < 32; k++) {
+					word[j][k] = Character.getNumericValue(block[i].charAt(32 * j + k));
+				}
+			}
+			for (int j = 16; j < 80; j++) {
+				int[] temp = new int[32];
+				temp = leftShift(xor(word[j - 3], xor(word[j - 8], xor(word[j - 14], word[j - 16]))));
+			}
+			for (int i = 0; i < 80; i++) {
+				
+			}
 		}
+	
 
 		return hashresult;
+	}
+
+	private int[] xor(int[] a, int[] b) throws ArrayIndexOutOfBoundsException {
+		ArrayIndexOutOfBoundsException e = new ArrayIndexOutOfBoundsException();
+		if (a.length != b.length)
+			throw e;
+		int[] tmp = new int[a.length];
+		for (int i = 0; i < a.length; i++) {
+			tmp[i] = a[i] ^ b[i];
+		}
+		return tmp;
+
+	}
+
+	private int[] leftShift(int[] word) {
+		int[] tmp = new int[word.length];
+		for (int i = 0; i < word.length; i++) {
+			tmp[i] = word[(i + 1) % word.length];
+		}
+		return tmp;
 	}
 
 }
