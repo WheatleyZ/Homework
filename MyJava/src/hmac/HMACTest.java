@@ -91,7 +91,7 @@ public class HMACTest {
 				for (int l = 0; i < 30; i++) {
 					leftShift(hash[1]);
 				}
-				leftShift(hash);
+				hash = leftShift(hash);
 			}
 			for (int j = 0; j < 5; j++) {
 				hashres[j] = addM32(hashres[j], hash[j]);
@@ -109,19 +109,28 @@ public class HMACTest {
 				k *= 2;
 				k += ans[i * 4 + j];
 			}
-			System.out.printf("%h",k);
+			System.out.printf("%h", k);
 		}
 
 		return null;
 	}
 
-	private static void leftShift(int[][] word) {
+	private static int[] leftShift(int[] word) {
+		int[] tmp = new int[word.length];
+		for (int i = 0; i < word.length; i++) {
+			tmp[i] = word[(i + 1) % word.length];
+		}
+		return tmp;
+	}
+
+	private static int[][] leftShift(int[][] word) {
 		int[][] tmp = new int[word.length][word[0].length];
 		for (int i = 0; i < word.length; i++) {
 			for (int j = 0; j < tmp[0].length; j++) {
 				tmp[i][j] = word[(i + 1) % word.length][j];
 			}
 		}
+		return tmp;
 	}
 
 	private static int[] addM32(int[] a, int[] b) {
@@ -136,7 +145,7 @@ public class HMACTest {
 
 	private static int[] iToA_32(long Int) {
 		int[] str = new int[32];
-		String num = String.format("%32s", Long.toBinaryString(Int).replaceAll(" ", "0"));
+		String num = String.format("%32s", Long.toBinaryString(Int)).replaceAll(" ", "0");
 		for (int i = 0; i < 32; i++) {
 			str[i] = Character.getNumericValue(num.charAt(i));
 		}
@@ -158,7 +167,7 @@ public class HMACTest {
 	private static int[] not(int[] a) {
 		int[] tmp = new int[a.length];
 		for (int i = 0; i < a.length; i++) {
-			tmp[i] = ~a[i];
+			tmp[i] = ~a[i] + 2;
 		}
 		return tmp;
 
@@ -186,14 +195,6 @@ public class HMACTest {
 		}
 		return tmp;
 
-	}
-
-	private static int[] leftShift(int[] word) {
-		int[] tmp = new int[word.length];
-		for (int i = 0; i < word.length; i++) {
-			tmp[i] = word[(i + 1) % word.length];
-		}
-		return tmp;
 	}
 
 }
