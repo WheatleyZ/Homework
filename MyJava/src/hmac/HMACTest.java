@@ -48,14 +48,17 @@ public class HMACTest {
 		}
 
 		int[][] hashres = new int[5][32];
-		hashres[0] = iToA_32(0x67452301);
-		hashres[1] = iToA_32(0xEFCDAB89);
-		hashres[2] = iToA_32(0x98BADCFE);
-		hashres[3] = iToA_32(0x10325476);
-		hashres[4] = iToA_32(0xC3D2E1F0);
+		hashres[0] = iToA_32(0x67452301l);
+		hashres[1] = iToA_32(0xEFCDAB89l);
+		hashres[2] = iToA_32(0x98BADCFEl);
+		hashres[3] = iToA_32(0x10325476l);
+		hashres[4] = iToA_32(0xC3D2E1F0l);
 
 		for (int i = 0; i < block.length; i++) {
 			int[][] hash = new int[5][32];
+			for (int j = 0; j < 5; j++) {
+				hash[j] = hashres[j];
+			}
 			int[][] word = new int[80][32];
 			for (int j = 0; j < 16; j++) {
 				for (int k = 0; k < 32; k++) {
@@ -65,33 +68,30 @@ public class HMACTest {
 			for (int j = 16; j < 80; j++) {
 				word[j] = leftShift(xor(word[j - 3], xor(word[j - 8], xor(word[j - 14], word[j - 16]))));
 			}
-			for (int j = 0; j < 5; j++) {
-				hash[j] = word[j];
-			}
 			for (int j = 0; j < 80; j++) {
 				int[] f = new int[32];
 				int[] k = new int[32];
 				if (j < 20) {
-					f = or(and(hash[1], hash[2]), and(not(hash[1]), hash[3]));
-					k = iToA_32(0x5a827999);
+					f = xor(hash[3], and(hash[1], xor(hash[2], hash[3])));
+					k = iToA_32(0x5a827999l);
 				} else if (j < 40) {
 					f = xor(hash[1], xor(hash[2], hash[3]));
-					k = iToA_32(0x6ed9eba1);
+					k = iToA_32(0x6ed9eba1l);
 				} else if (j < 60) {
-					f = or(and(hash[1], hash[2]), or(and(hash[1], hash[3]), and(hash[2], hash[3])));
-					k = iToA_32(0x8f1bbcdc);
-				} else {
+					f = or(and(hash[1], hash[2]), and(hash[3], or(hash[1], hash[2])));
+					k = iToA_32(0x8f1bbcdcl);
+				} else if (j < 80) {
 					f = xor(hash[1], xor(hash[2], hash[3]));
-					k = iToA_32(0xca62c1d6);
+					k = iToA_32(0xca62c1d6l);
 				}
 				for (int l = 0; l < 5; l++) {
 					leftShift(hash[0]);
 				}
-				hash[0] = addM32(hash[0], addM32(f, addM32(hash[4], addM32(k, word[i]))));
-				for (int l = 0; i < 30; i++) {
+				hash[0] = addM32(hash[0], addM32(f, addM32(hash[4], addM32(k, word[j]))));
+				for (int l = 0; l < 30; l++) {
 					leftShift(hash[1]);
 				}
-				hash = leftShift(hash);
+				hash = rightShift(hash);
 			}
 			for (int j = 0; j < 5; j++) {
 				hashres[j] = addM32(hashres[j], hash[j]);
@@ -105,7 +105,7 @@ public class HMACTest {
 
 		for (int i = 0; i < 40; i++) {
 			int k = ans[i * 4];
-			for (int j = 0; j < 4; j++) {
+			for (int j = 1; j < 4; j++) {
 				k *= 2;
 				k += ans[i * 4 + j];
 			}
@@ -123,11 +123,11 @@ public class HMACTest {
 		return tmp;
 	}
 
-	private static int[][] leftShift(int[][] word) {
+	private static int[][] rightShift(int[][] word) {
 		int[][] tmp = new int[word.length][word[0].length];
 		for (int i = 0; i < word.length; i++) {
 			for (int j = 0; j < tmp[0].length; j++) {
-				tmp[i][j] = word[(i + 1) % word.length][j];
+				tmp[(i + 1) % word.length][j] = word[i][j];
 			}
 		}
 		return tmp;
@@ -145,9 +145,9 @@ public class HMACTest {
 
 	private static int[] iToA_32(long Int) {
 		int[] str = new int[32];
-		String num = String.format("%32s", Long.toBinaryString(Int)).replaceAll(" ", "0");
+		String num = String.format("%64s", Long.toBinaryString(Int)).replaceAll(" ", "0");
 		for (int i = 0; i < 32; i++) {
-			str[i] = Character.getNumericValue(num.charAt(i));
+			str[i] = Character.getNumericValue(num.charAt(i + 32));
 		}
 		return str;
 	}
