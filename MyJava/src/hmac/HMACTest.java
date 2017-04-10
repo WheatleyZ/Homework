@@ -48,14 +48,22 @@ public class HMACTest {
 				}
 			}
 			for (int j = 16; j < 80; j++) {
-				int[] temp = new int[32];
-				temp = leftShift(xor(word[j - 3], xor(word[j - 8], xor(word[j - 14], word[j - 16]))));
+				word[j] = leftShift(xor(word[j - 3], xor(word[j - 8], xor(word[j - 14], word[j - 16]))));
 			}
-			for (int i = 0; i < 80; i++) {
-				
+			int[][] hash = new int[5][32];
+			for (int j = 0; j < 80; j++) {
+				long f = 0;
+				if (j < 20) {
+					long k = 0x5a827999;
+				} else if (j < 40) {
+					long k = 0x6ed9eba1;
+				} else if (j < 60) {
+					long k = 0x8f1bbcdc;
+				} else {
+					long k = 0xca62c1d6;
+				}
 			}
 		}
-	
 
 		return hashresult;
 	}
