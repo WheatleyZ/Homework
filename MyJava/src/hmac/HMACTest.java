@@ -31,7 +31,7 @@ public class HMACTest {
 	private static String sha1(byte[] bs) {
 		String message = "";
 		for (byte a : bs) {
-			message += Integer.toBinaryString(a);
+			message += String.format("%8s", Integer.toBinaryString(a)).replaceAll(" ", "0");
 		}
 		String msg = message + '1';
 		while (msg.length() % 512 < 448) {
