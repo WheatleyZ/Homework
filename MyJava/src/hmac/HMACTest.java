@@ -5,33 +5,43 @@ import java.util.ArrayList;
 public class HMACTest {
 
 	public static void main(String[] args) {
-		String str = "111111";
-		sha1(str.getBytes());
+
 	}
 
-	// private void hmac (int[] k, String message) {
-	// int[] key = new int[64];
-	// if (k.length > 64) {
-	// key = hash(k); // keys longer than block size are shortened
-	// }
-	// if (k.length < 64) {
-	// // keys shorter than block size are zero-padded (where ∥ is
-	// concatenation)
-	// for(int i=k.length;i<64;i++)key[i]=0; // Where * is repetition.
-	// }
-	//
-	// o_key_pad = [0x5c * blocksize] ⊕ key; // Where block size is that of the
-	// underlying hash function
-	// i_key_pad = [0x36 * blocksize] ⊕ key; // Where ⊕ is exclusive or (XOR)
-	//
-	// return hash(o_key_pad ∥ hash(i_key_pad ∥ message)); // Where ∥ is
-	// concatenation
-	// }
+	private static String hmac(int[] k, String message) {
+		byte[] s = message.getBytes();
+		String msg = "";
+		for (byte a : s) {
+			msg += String.format("%8s", Integer.toBinaryString(a)).replaceAll(" ", "0");
+		}
+		if (k.length > 64) {
+			k = sha1(k); // keys longer than blocksize are shortened
+		}
+		if (k.length < 64) {
+			// keys shorter than blocksize are zero-padded (where ∥ is
+			// concatenation)
+			int[] tmp = new int[64];
+			for (int a : tmp)
+				a = 0;
+			for (int i = 0; i < k.length; i++) {
+				tmp[i] = k[i];
+			}
+			k = tmp;
+		}
 
-	private static String sha1(byte[] bs) {
+		 o_key_pad = [0x5c * blocksize] ⊕ key // Where blocksize is that of
+		// the underlying hash function
+		 i_key_pad = [0x36 * blocksize] ⊕ key // Where ⊕ is exclusive or (XOR)
+
+		 return hash(o_key_pad ∥ hash(i_key_pad ∥ message)); // Where ∥ is
+	}
+
+	// private static
+
+	private static int[] sha1(int[] m) {
 		String message = "";
-		for (byte a : bs) {
-			message += String.format("%8s", Integer.toBinaryString(a)).replaceAll(" ", "0");
+		for (int a : m) {
+			message += a;
 		}
 		String msg = message + '1';
 		while (msg.length() % 512 < 448) {
@@ -71,6 +81,7 @@ public class HMACTest {
 			for (int j = 0; j < 80; j++) {
 				int[] f = new int[32];
 				int[] k = new int[32];
+				int[] a = hash[0];
 				if (j < 20) {
 					f = xor(hash[3], and(hash[1], xor(hash[2], hash[3])));
 					k = iToA_32(0x5a827999l);
@@ -85,12 +96,13 @@ public class HMACTest {
 					k = iToA_32(0xca62c1d6l);
 				}
 				for (int l = 0; l < 5; l++) {
-					leftShift(hash[0]);
+					hash[0] = leftShift(hash[0]);
 				}
-				hash[0] = addM32(hash[0], addM32(f, addM32(hash[4], addM32(k, word[j]))));
+				hash[4] = addM32(hash[0], addM32(f, addM32(hash[4], addM32(k, word[j]))));
 				for (int l = 0; l < 30; l++) {
-					leftShift(hash[1]);
+					hash[1] = leftShift(hash[1]);
 				}
+				hash[0] = a;
 				hash = rightShift(hash);
 			}
 			for (int j = 0; j < 5; j++) {
@@ -102,17 +114,7 @@ public class HMACTest {
 		for (int j = 0; j < 160; j++) {
 			ans[j] = hashres[j / 32][j % 32];
 		}
-
-		for (int i = 0; i < 40; i++) {
-			int k = ans[i * 4];
-			for (int j = 1; j < 4; j++) {
-				k *= 2;
-				k += ans[i * 4 + j];
-			}
-			System.out.printf("%h", k);
-		}
-
-		return null;
+		return ans;
 	}
 
 	private static int[] leftShift(int[] word) {
@@ -136,7 +138,7 @@ public class HMACTest {
 	private static int[] addM32(int[] a, int[] b) {
 		int[] ans = new int[32];
 		int addFlag = 0;
-		for (int i = 31; i > 0; i--) {
+		for (int i = 31; i >= 0; i--) {
 			ans[i] = a[i] ^ b[i] ^ addFlag;
 			addFlag = (a[i] & b[i]) | (addFlag & (a[i] ^ b[i]));
 		}
