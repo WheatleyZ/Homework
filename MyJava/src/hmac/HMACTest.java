@@ -5,22 +5,33 @@ import java.util.ArrayList;
 public class HMACTest {
 
 	public static void main(String[] args) {
-
+		
+		int[] ans = hmac(k, m);
+		for (int i = 0; i < 40; i++) {
+			int k = ans[i * 4];
+			for (int j = 1; j < 4; j++) {
+				k *= 2;
+				k += ans[i * 4 + j];
+			}
+			System.out.printf("%h", k);
+		}
 	}
 
-	private static String hmac(int[] k, String message) {
+	private static int[] hmac(int[] k, String message) {
 		byte[] s = message.getBytes();
 		String msg = "";
 		for (byte a : s) {
 			msg += String.format("%8s", Integer.toBinaryString(a)).replaceAll(" ", "0");
 		}
-		if (k.length > 64) {
-			k = sha1(k); // keys longer than blocksize are shortened
+		int[] m = new int[msg.length()];
+		for (int i = 0; i < msg.length(); i++) {
+			m[i] = Character.getNumericValue(msg.charAt(i));
 		}
-		if (k.length < 64) {
-			// keys shorter than blocksize are zero-padded (where ∥ is
-			// concatenation)
-			int[] tmp = new int[64];
+		if (k.length > 512) {
+			k = sha1(k);
+		}
+		if (k.length < 512) {
+			int[] tmp = new int[512];
 			for (int a : tmp)
 				a = 0;
 			for (int i = 0; i < k.length; i++) {
@@ -28,15 +39,30 @@ public class HMACTest {
 			}
 			k = tmp;
 		}
-
-		 o_key_pad = [0x5c * blocksize] ⊕ key // Where blocksize is that of
-		// the underlying hash function
-		 i_key_pad = [0x36 * blocksize] ⊕ key // Where ⊕ is exclusive or (XOR)
-
-		 return hash(o_key_pad ∥ hash(i_key_pad ∥ message)); // Where ∥ is
+		int[] o_key_pad = xor(createPadding(0x5c), k);
+		int[] i_key_pad = xor(createPadding(0x36), k);
+		return sha1(arrayAppend(o_key_pad, sha1(arrayAppend(i_key_pad, m))));
 	}
 
-	// private static
+	private static int[] createPadding(int x) {
+		int[] pad = new int[512];
+		String padding = String.format("%8b", x).replaceAll(" ", "0");
+		for (int i = 0; i < 512; i++) {
+			pad[i] = Character.getNumericValue(padding.charAt(i % 8));
+		}
+		return null;
+	}
+
+	private static int[] arrayAppend(int[] a, int[] b) {
+		int[] ans = new int[a.length + b.length];
+		for (int i = 0; i < a.length; i++) {
+			ans[i] = a[i];
+		}
+		for (int i = a.length; i < ans.length; i++) {
+			ans[i] = b[i - a.length];
+		}
+		return ans;
+	}
 
 	private static int[] sha1(int[] m) {
 		String message = "";
@@ -114,6 +140,14 @@ public class HMACTest {
 		for (int j = 0; j < 160; j++) {
 			ans[j] = hashres[j / 32][j % 32];
 		}
+		// for (int i = 0; i < 40; i++) {
+		// int k = ans[i * 4];
+		// for (int j = 1; j < 4; j++) {
+		// k *= 2;
+		// k += ans[i * 4 + j];
+		// }
+		// System.out.printf("%h", k);
+		// }
 		return ans;
 	}
 
