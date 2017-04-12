@@ -5,6 +5,8 @@ public class HMACTest {
 	public static void main(String[] args) {
 		String k = "8f03456d3f78e2c5";
 		String m = "3b3898371520f75e";
+		System.out.println("key: "+k);
+		System.out.println("message: "+m);
 		int[] ans = hmac(k, m);
 		System.out.print("HMAC:");
 		for (int i = 0; i < 40; i++) {
