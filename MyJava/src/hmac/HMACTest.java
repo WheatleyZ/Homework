@@ -5,7 +5,8 @@ import java.util.ArrayList;
 public class HMACTest {
 
 	public static void main(String[] args) {
-		
+		String k = "";
+		String m = "";
 		int[] ans = hmac(k, m);
 		for (int i = 0; i < 40; i++) {
 			int k = ans[i * 4];
@@ -17,7 +18,17 @@ public class HMACTest {
 		}
 	}
 
-	private static int[] hmac(int[] k, String message) {
+	private static int[] hmac(String key, String message) {
+		int[] k = new int[0];
+		for (int i = 0; i < key.length(); i++) {
+			String tmp = String.format("%4s", Integer.toBinaryString(Character.getNumericValue(key.charAt(i))))
+					.replaceAll(" ", "0");
+			int[] t = new int[4];
+			for (int j = 0; j < 4; j++) {
+				t[j] = Character.getNumericValue(tmp.charAt(i));
+			}
+			k = arrayAppend(k, t);
+		}
 		byte[] s = message.getBytes();
 		String msg = "";
 		for (byte a : s) {
