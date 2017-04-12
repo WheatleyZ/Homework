@@ -9,10 +9,10 @@ public class HMACTest {
 		String m = "";
 		int[] ans = hmac(k, m);
 		for (int i = 0; i < 40; i++) {
-			int k = ans[i * 4];
+			int t = ans[i * 4];
 			for (int j = 1; j < 4; j++) {
-				k *= 2;
-				k += ans[i * 4 + j];
+				t *= 2;
+				t += ans[i * 4 + j];
 			}
 			System.out.printf("%h", k);
 		}
