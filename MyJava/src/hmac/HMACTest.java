@@ -1,20 +1,19 @@
 package hmac;
 
-import java.util.ArrayList;
-
 public class HMACTest {
 
 	public static void main(String[] args) {
-		String k = "";
-		String m = "";
+		String k = "8f03456d3f78e2c5";
+		String m = "3b3898371520f75e";
 		int[] ans = hmac(k, m);
+		System.out.print("HMAC:");
 		for (int i = 0; i < 40; i++) {
 			int t = ans[i * 4];
 			for (int j = 1; j < 4; j++) {
 				t *= 2;
 				t += ans[i * 4 + j];
 			}
-			System.out.printf("%h", k);
+			System.out.print(Integer.toHexString(t));
 		}
 	}
 
@@ -25,7 +24,7 @@ public class HMACTest {
 					.replaceAll(" ", "0");
 			int[] t = new int[4];
 			for (int j = 0; j < 4; j++) {
-				t[j] = Character.getNumericValue(tmp.charAt(i));
+				t[j] = Character.getNumericValue(tmp.charAt(j));
 			}
 			k = arrayAppend(k, t);
 		}
@@ -52,16 +51,17 @@ public class HMACTest {
 		}
 		int[] o_key_pad = xor(createPadding(0x5c), k);
 		int[] i_key_pad = xor(createPadding(0x36), k);
-		return sha1(arrayAppend(o_key_pad, sha1(arrayAppend(i_key_pad, m))));
+		int[] ans = sha1(arrayAppend(o_key_pad, sha1(arrayAppend(i_key_pad, m))));
+		return ans;
 	}
 
 	private static int[] createPadding(int x) {
 		int[] pad = new int[512];
-		String padding = String.format("%8b", x).replaceAll(" ", "0");
+		String padding = String.format("%8s", Integer.toBinaryString(x)).replaceAll(" ", "0");
 		for (int i = 0; i < 512; i++) {
 			pad[i] = Character.getNumericValue(padding.charAt(i % 8));
 		}
-		return null;
+		return pad;
 	}
 
 	private static int[] arrayAppend(int[] a, int[] b) {
