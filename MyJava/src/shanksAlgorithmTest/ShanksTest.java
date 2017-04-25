@@ -51,29 +51,24 @@ public class ShanksTest {
 	}
 
 	public static long GetRemainder(long baseNum, long power, long modelNum) {
-		// 判断各个值正确性
 		long tempNum = 1;
 		long remainder = 0;
 		if (power == 0)
 			remainder = 1;
 		while (power >= 1) {
-			// 当为1的时候，得出结果
 			if (power == 1) {
 				remainder = (tempNum * baseNum) % modelNum;
 				break;
 			} else {
-				// 如果指数是偶数，将基数平方，指数除以2
 				if ((power & 1) == 0) {
 					baseNum = (baseNum * baseNum) % modelNum;
 					power >>= 1;
 				}
-				// 如果是奇数，将tempNum乘以基数 并取模，指数减1
 				else {
 					tempNum = (tempNum * baseNum) % modelNum;
 					power -= 1;
 				}
 			}
-			// System.out.println(baseNum + power + modelNum + tempNum);
 		}
 		return remainder;
 	}
