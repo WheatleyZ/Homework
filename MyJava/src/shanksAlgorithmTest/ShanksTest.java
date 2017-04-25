@@ -5,7 +5,8 @@ import java.math.*;
 public class ShanksTest {
 
 	public static void main(String[] args) {
-		System.out.println(shankes(809, 3, 525));
+		System.out.println("mod:" + 809 + " α:" + 3 + " β:" + 525);
+		System.out.println("result:" + shankes(809, 3, 525));
 	}
 
 	private static long shankes(long n, long alpha, long beta) throws ArrayIndexOutOfBoundsException {
