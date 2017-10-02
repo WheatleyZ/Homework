@@ -35,7 +35,7 @@ public class 宋词自动生成 {
 		generated.setSize(600, 300);
 		generated.setAlignment(Label.CENTER);
 		model = new TextField(80);
-		gen = new Button("生成！");
+		gen = new Button("念诗！");
 		window.setSize(600, 400);
 		window.setVisible(true);
 		window.add(top, "North");

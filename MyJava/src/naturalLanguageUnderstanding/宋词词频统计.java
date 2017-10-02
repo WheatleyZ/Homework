@@ -13,7 +13,7 @@ import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class 词频统计 {
+public class 宋词词频统计 {
 
 	public static void main(String[] args) throws IOException {
 		HashMap<String, Integer> monoGram = new HashMap<>();
