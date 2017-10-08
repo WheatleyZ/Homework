@@ -73,6 +73,7 @@ public class 中文词频统计 {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathname)));
         while (br.ready()) {
             String[] read = br.readLine().split("  ");
+            read[0]="<BOS>/m";
             for (int i=0;i<read.length;i++) {
                 if (read[i].contains("[")) {
                     read[i] = read[i].substring(1, read[i].length());
