@@ -49,16 +49,16 @@ public class 中文分词 {
             String[] tmp = br.readLine().split(" ");
             dic.put(tmp[0], Integer.parseInt(tmp[2]));
         }
-        int head = 0;
-        int tail;
-        while (head < rawStr.length()) {
-            tail = rawStr.length();
+        int head;
+        int tail=rawStr.length();
+        while (tail>=0) {
+            head=0;
             while (head <= tail) {
                 if (dic.containsKey(rawStr.substring(head, tail)) || head == tail) {
-                    processedStr.add(rawStr.substring(head, tail));
-                    head = tail;
+                    processedStr.add(0,rawStr.substring(head, tail));
+                    tail=head;
                     break;
-                } else tail--;
+                } else head++;
             }
         }
         StringBuffer result = new StringBuffer();
