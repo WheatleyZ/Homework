@@ -1,5 +1,6 @@
 package naturalLanguageUnderstanding;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
@@ -7,10 +8,41 @@ import java.util.*;
 
 public class 中文分词 {
 
+    private static Frame window;
+    private static Panel top, bottom;
+    private static Button gen;
+    private static TextField model;
+    private static Label generated;
+
     public static void main(String args[]) throws Exception {
+        window = new Frame("中文分词");
+        top = new Panel();
+        bottom = new Panel();
+        generated = new Label();
+        generated.setSize(600, 300);
+        generated.setAlignment(Label.CENTER);
+        model = new TextField(80);
+        gen = new Button("拆！");
+        window.setSize(600, 400);
+        window.setVisible(true);
+        window.add(top, "North");
+        window.add(generated, "Center");
+        window.add(bottom, "South");
+        top.add(model);
+        bottom.add(gen);
+        gen.addActionListener(e -> {
+            try {
+                generated.setText(splitWord(model.getText()));
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
+    }
+
+    private static String splitWord(String rawStr) throws Exception {
         String dicPath = "/Users/admin/Desktop/Co2M.txt";
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(dicPath)));
-        String rawStr = "香港女记者速度惊人";
         HashMap<String, Integer> dic = new HashMap<>();
         Vector<String> processedStr = new Vector<>();
         while (br.ready()) {
@@ -29,6 +61,10 @@ public class 中文分词 {
                 } else tail--;
             }
         }
-        System.out.println(processedStr);
+        StringBuffer result = new StringBuffer();
+        for (String s : processedStr) {
+            result.append(" ").append(s);
+        }
+        return result.toString();
     }
 }

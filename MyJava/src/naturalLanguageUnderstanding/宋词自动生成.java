@@ -22,10 +22,6 @@ public class 宋词自动生成 {
 	static Button gen;
 	static TextField model;
 	static Label generated;
-	static File f;
-	static BufferedImage bi;
-	static JScrollPane scrollPane;
-	static JFileChooser fileChoose;
 
 	public static void main(String[] args) throws Exception {
 		window = new Frame("宋词自动生成");
@@ -43,18 +39,14 @@ public class 宋词自动生成 {
 		window.add(bottom, "South");
 		top.add(model);
 		bottom.add(gen);
-		gen.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					generated.setText(generate(model.getText()));
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
+		gen.addActionListener(e -> {
+            try {
+                generated.setText(generate(model.getText()));
+            } catch (Exception e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+        });
 	}
 
 	static String generate(String model) throws Exception {
