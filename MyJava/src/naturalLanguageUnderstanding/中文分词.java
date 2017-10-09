@@ -10,8 +10,8 @@ public class 中文分词 {
 
     private static Frame window;
     private static Panel top, bottom;
-    private static Button gen;
-    private static TextField model;
+    private static Button splitButton;
+    private static TextField input;
     private static Label generated;
 
     public static void main(String args[]) throws Exception {
@@ -21,18 +21,19 @@ public class 中文分词 {
         generated = new Label();
         generated.setSize(600, 300);
         generated.setAlignment(Label.CENTER);
-        model = new TextField(80);
-        gen = new Button("拆！");
+        input = new TextField(50);
+        splitButton = new Button("拆！");
         window.setSize(600, 400);
         window.setVisible(true);
         window.add(top, "North");
         window.add(generated, "Center");
         window.add(bottom, "South");
-        top.add(model);
-        bottom.add(gen);
-        gen.addActionListener(e -> {
+        top.add(input);
+        bottom.add(splitButton);
+        input.setPreferredSize(new Dimension(generated.getWidth(),top.getHeight()));
+        splitButton.addActionListener(e -> {
             try {
-                generated.setText(splitWord(model.getText()));
+                generated.setText(splitWord(input.getText()));
             } catch (Exception e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
@@ -51,7 +52,7 @@ public class 中文分词 {
         }
         int head;
         int tail=rawStr.length();
-        while (tail>=0) {
+        while (tail>0) {
             head=0;
             while (head <= tail) {
                 if (dic.containsKey(rawStr.substring(head, tail)) || head == tail) {
