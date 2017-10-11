@@ -43,7 +43,6 @@ public class 宋词自动生成 {
             try {
                 generated.setText(generate(model.getText()));
             } catch (Exception e1) {
-                // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
         });
@@ -51,11 +50,11 @@ public class 宋词自动生成 {
 
 	static String generate(String model) throws Exception {
 		BufferedReader mbr = new BufferedReader(
-				new InputStreamReader(new FileInputStream("C:/users/zheng/desktop/CoM.txt"), "UTF-8"));
+				new InputStreamReader(new FileInputStream("/Users/admin/Desktop/CoM.txt"), "UTF-8"));
 		BufferedReader bbr = new BufferedReader(
-				new InputStreamReader(new FileInputStream("C:/users/zheng/desktop/CoB.txt"), "UTF-8"));
+				new InputStreamReader(new FileInputStream("/Users/admin/Desktop/CoB.txt"), "UTF-8"));
 		BufferedReader tbr = new BufferedReader(
-				new InputStreamReader(new FileInputStream("C:/users/zheng/desktop/CoT.txt"), "UTF-8"));
+				new InputStreamReader(new FileInputStream("/Users/admin/Desktop/CoT.txt"), "UTF-8"));
 		Vector<String> monoWord = new Vector<String>();
 		Vector<String> biWord = new Vector<String>();
 		Vector<String> triWord = new Vector<String>();

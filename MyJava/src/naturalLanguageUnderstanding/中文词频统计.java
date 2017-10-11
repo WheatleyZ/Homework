@@ -68,7 +68,7 @@ public class 中文词频统计 {
     public static void main(String[] args) throws IOException {
         HashMap<String, Integer> monoGram = new HashMap<>();
         HashMap<String, Integer> biGram = new HashMap<>();
-        String pathname = "C:/users/zheng/desktop/Ci2.txt";
+        String pathname = "/Users/admin/Desktop/Ci2.txt";
         String buffer = "";
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathname)));
         while (br.ready()) {
@@ -108,8 +108,8 @@ public class 中文词频统计 {
                 biV.add(c.new dualTriple(str[0], str[1], str[2], str[3], e.getValue()));
             }
         }
-        BufferedWriter mbw = new BufferedWriter(new FileWriter("C:/users/zheng/desktop/Co2M.txt"));
-        BufferedWriter bbw = new BufferedWriter(new FileWriter("C:/users/zheng/desktop/Co2B.txt"));
+        BufferedWriter mbw = new BufferedWriter(new FileWriter("/Users/admin/Desktop/Co2M.txt"));
+        BufferedWriter bbw = new BufferedWriter(new FileWriter("/Users/admin/Desktop/Co2B.txt"));
         for (triple t : monoV) {
             mbw.write(t.word + " " + t.type + " " + t.count + "\r\n");
         }

@@ -19,7 +19,7 @@ public class 宋词词频统计 {
 		HashMap<String, Integer> monoGram = new HashMap<>();
 		HashMap<String, Integer> biGram = new HashMap<>();
 		HashMap<String, Integer> triGram = new HashMap<>();
-		String pathname = "C:/users/zheng/desktop/Ci.txt";
+		String pathname = "/Users/admin/Desktop/Ci.txt";
 		String buffer = "";
 		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(pathname), "UTF-8"));
 		while (br.ready()) {
@@ -71,9 +71,9 @@ public class 宋词词频统计 {
 		});
 		// System.out.println(monoGramList.toString());
 		// System.out.println(biGramList.toString());
-		BufferedWriter mbw = new BufferedWriter(new FileWriter("C:/users/zheng/desktop/CoM.txt"));
-		BufferedWriter bbw = new BufferedWriter(new FileWriter("C:/users/zheng/desktop/CoB.txt"));
-		BufferedWriter tbw = new BufferedWriter(new FileWriter("C:/users/zheng/desktop/CoT.txt"));
+		BufferedWriter mbw = new BufferedWriter(new FileWriter("/Users/admin/Desktop/CoM.txt"));
+		BufferedWriter bbw = new BufferedWriter(new FileWriter("/Users/admin/Desktop/CoB.txt"));
+		BufferedWriter tbw = new BufferedWriter(new FileWriter("/Users/admin/Desktop/CoT.txt"));
 		for (Entry<String, Integer> item : monoGramList) {
 			mbw.write(item.getKey() + " " + item.getValue() + "\r\n");
 		}
